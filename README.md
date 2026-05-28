@@ -29,14 +29,24 @@ La contraseña de aplicación se genera en: https://myaccount.google.com/apppass
 
 ## Uso
 
-1. Prepara `mapeo_hardware.xlsx` con las columnas:
+1. Prepara un Excel con las columnas:
    `SKU_Interno`, `Nombre_Producto`, `Precio_Propio`, `Stock_Propio`,
    `URL_Competidor_A`, `URL_Competidor_B`
 
 2. Ejecuta:
 
 ```bash
+# Archivo por defecto (mapeo_hardware.xlsx)
 python3 hardware_price_monitor.py
+
+# Archivo personalizado
+python3 hardware_price_monitor.py -f otro_archivo.xlsx
+
+# Ayuda
+python3 hardware_price_monitor.py -help
 ```
 
-Genera `Dashboard_Hardware_YYYYMMDD.xlsx` y envía el reporte por correo con el archivo adjunto.
+## Salida
+
+- `Dashboard_Hardware_YYYYMMDD.xlsx` — generado en el directorio actual y copiado al escritorio.
+- Correo electrónico con resumen y el archivo adjunto (si se configuró SMTP).
