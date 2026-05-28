@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Entorno
+.env
+
+# Excel generado
+Dashboard_Hardware_*.xlsx
+
+# Lock files de office
+.~lock.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
