@@ -17,7 +17,9 @@ Output:
 import os
 import sys
 import ssl
+import shutil
 import smtplib
+import argparse
 import logging
 from datetime import datetime
 from email.message import EmailMessage
@@ -159,7 +161,31 @@ def main() -> None:
     setup_logging()
     load_dotenv()
 
-    input_file = "mapeo_hardware.xlsx"
+    parser = argparse.ArgumentParser(
+        description="Monitor de Precios de Hardware",
+        epilog=(
+            "Escanea los precios de productos propios frente a 2 competidores "
+            "a partir de un archivo Excel, genera un dashboard con alertas y "
+            "envia el reporte por correo electronico via SMTP de Google.\n\n"
+            "Ejemplo:\n"
+            "  python3 hardware_price_monitor.py -f mapeo_hardware.xlsx"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        add_help=False,
+    )
+    parser.add_argument(
+        "-help", "-h", "--help",
+        action="help",
+        help="Muestra este mensaje de ayuda y sale",
+    )
+    parser.add_argument(
+        "-f", "--file",
+        default="mapeo_hardware.xlsx",
+        help="Archivo Excel de entrada (default: mapeo_hardware.xlsx)",
+    )
+    args = parser.parse_args()
+
+    input_file = args.file
     if not os.path.isfile(input_file):
         logging.error("No se encuentra el archivo de entrada: %s", input_file)
         sys.exit(1)
@@ -287,6 +313,15 @@ def main() -> None:
 
     # 6) Enviar correo
     send_email(out_file, summary)
+
+    # 7) Copiar al escritorio
+    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+    if os.path.isdir(desktop):
+        try:
+            shutil.copy(out_file, desktop)
+            logging.info("  Dashboard copiado a: %s", desktop)
+        except Exception as exc:
+            logging.warning("No se pudo copiar al escritorio: %s", exc)
 
 
 if __name__ == "__main__":
